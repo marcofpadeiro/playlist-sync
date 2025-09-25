@@ -6,5 +6,10 @@ edition = "2024"
 [dependencies]
 
 [workspace]
-members = ["crates/*", "apps/cli"]
+members = [
+    "src/crates/common",
+    "src/crates/local-music-parser",
+    "src/crates/spotify-parser",
+    "src/apps/cli",
+]
 resolver = "2"
