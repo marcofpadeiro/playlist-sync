@@ -5,13 +5,14 @@ mod tests {
     fn build_track_from_csv(line: &str) -> Track {
         let mut parts = line.split(',');
 
-        Track::build(
+        Track::new(
             parts.next().unwrap().to_string(),
             parts.next().unwrap().to_string(),
             parts.next().unwrap().to_string(),
             parts.next().unwrap_or_default().parse::<u32>().ok(),
             parts.next().unwrap_or_default().parse::<u32>().ok(),
             parts.next().unwrap_or_default().parse::<u32>().ok(),
+            None,
         )
     }
 

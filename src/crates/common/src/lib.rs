@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 #[derive(Debug, Eq)]
 pub struct Track {
     title: String,
@@ -6,16 +8,24 @@ pub struct Track {
     track_num: Option<u32>,
     year: Option<u32>,
     duration: Option<u32>, // ms
+    path: Option<PathBuf>,
+}
+
+pub trait TrackListProvider {
+    type Error;
+
+    fn get_tracks(&self) -> Result<Vec<Track>, Self::Error>;
 }
 
 impl Track {
-    pub fn build(
+    pub fn new(
         title: String,
         album: String,
         artist: String,
         track_num: Option<u32>,
         year: Option<u32>,
         duration: Option<u32>,
+        path: Option<PathBuf>,
     ) -> Self {
         Self {
             title,
@@ -24,6 +34,7 @@ impl Track {
             track_num,
             year,
             duration,
+            path,
         }
     }
     fn eq_opt<T: PartialEq>(a: &Option<T>, b: &Option<T>) -> bool {

@@ -96,8 +96,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7943c866cc5cd64cbc25b2e01621d07fa8eb2a1a23160ee81ce38704e97b8ecf"
 
 [[package]]
-name = "local-music-parser"
+name = "local-music-library-parser"
 version = "0.1.0"
+dependencies = [
+ "common",
+]
 
 [[package]]
 name = "once_cell_polyfill"
@@ -113,8 +116,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "spotify-parser"
+name = "spotify-playlist-parser"
 version = "0.1.0"
+dependencies = [
+ "common",
+]
 
 [[package]]
 name = "strsim"
