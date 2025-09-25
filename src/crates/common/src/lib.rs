@@ -26,16 +26,6 @@ impl Track {
             duration,
         }
     }
-    fn normalize(&self) -> Track {
-        Track::build(
-            normalize_string(self.title.clone()),
-            normalize_string(self.album.clone()),
-            normalize_string(self.artist.clone()),
-            self.track_num,
-            self.year,
-            self.duration,
-        )
-    }
     fn eq_opt<T: PartialEq>(a: &Option<T>, b: &Option<T>) -> bool {
         match (a, b) {
             (None, None) => true,
@@ -53,26 +43,24 @@ impl Track {
 
 impl PartialEq for Track {
     fn eq(&self, other: &Self) -> bool {
-        let a = self.normalize();
-        let b = other.normalize();
+        let same_title = eq_normalized(&self.title, &other.title);
+        let same_album = eq_normalized(&self.album, &other.album);
+        let same_artist = eq_normalized(&self.artist, &other.artist);
 
-        let same_title = compare_strings(&a.title, &b.title);
-        let same_album = compare_strings(&a.album, &b.album);
-        let same_artist = compare_strings(&a.artist, &b.artist);
-
-        let important_matches = same_title as u8 + same_album as u8 + same_artist as u8;
-
-        match important_matches {
+        match same_title as u8 + same_album as u8 + same_artist as u8 {
             3 => true,
-            2 => a.secondaries_all_equal(&b),
+            2 => self.secondaries_all_equal(other),
             _ => false,
         }
     }
 }
 
-fn normalize_string(string: String) -> String {
-    string.chars().filter(|c| c.is_ascii_alphabetic()).collect()
+fn eq_normalized(a: &str, b: &str) -> bool {
+    normalized_chars(a).eq(normalized_chars(b))
 }
-fn compare_strings(s1: &String, s2: &String) -> bool {
-    s1 == s2 || s1.contains(s2) || s2.contains(s1)
+
+fn normalized_chars(s: &str) -> impl Iterator<Item = char> + '_ {
+    s.chars()
+        .filter(|c| c.is_alphabetic() && !c.is_whitespace())
+        .flat_map(|c| c.to_lowercase())
 }
