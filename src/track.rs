@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 #[derive(Debug, Eq)]
 pub struct Track {
     pub title: String,
@@ -8,12 +6,6 @@ pub struct Track {
     pub track_num: Option<u32>,
     pub year: Option<u32>,
     pub duration: Option<u32>, // ms
-}
-
-#[derive(Debug)]
-pub struct LocalTrack {
-    pub track: Track,
-    pub path: PathBuf,
 }
 
 impl Track {
@@ -63,23 +55,6 @@ impl PartialEq for Track {
     }
 }
 
-impl LocalTrack {
-    pub fn new(
-        title: String,
-        album: String,
-        artist: String,
-        track_num: Option<u32>,
-        year: Option<u32>,
-        duration: Option<u32>,
-        path: PathBuf,
-    ) -> Self {
-        Self {
-            track: Track::new(title, album, artist, track_num, year, duration),
-            path: path,
-        }
-    }
-}
-
 fn eq_normalized(a: &str, b: &str) -> bool {
     normalized_chars(a).eq(normalized_chars(b))
 }
@@ -88,4 +63,13 @@ fn normalized_chars(s: &str) -> impl Iterator<Item = char> + '_ {
     s.chars()
         .filter(|c| c.is_alphabetic() && !c.is_whitespace())
         .flat_map(|c| c.to_lowercase())
+}
+
+pub fn release_year<D>(release_date: D) -> Option<u32>
+where
+    D: Into<Option<String>>,
+{
+    release_date
+        .into()
+        .and_then(|s| s.get(0..4).and_then(|y| y.parse::<u32>().ok()))
 }
