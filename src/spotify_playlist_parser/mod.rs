@@ -7,13 +7,13 @@ use crate::track::{Track, release_year};
 use anyhow::Result;
 use futures::StreamExt;
 
-use rspotify::ClientError;
 use rspotify::model::PlaylistItem;
 use rspotify::{
     AuthCodePkceSpotify,
     model::{Market, PlaylistId},
     prelude::BaseClient,
 };
+use rspotify::{ClientError, model};
 
 pub struct SpotifyPlaylistClient {
     client: AuthCodePkceSpotify,
@@ -24,8 +24,8 @@ impl SpotifyPlaylistClient {
         Self { client }
     }
 
-    pub async fn get_tracks(&self, playlist_id_or_uri: &str) -> Result<Vec<Track>> {
-        let pid = PlaylistId::from_id_or_uri(playlist_id_or_uri)?;
+    pub async fn get_tracks(&self, playlist_id: &str) -> Result<Vec<Track>> {
+        let pid = PlaylistId::from_id_or_uri(playlist_id)?;
         let mut result = Vec::new();
 
         let playlist = self
@@ -36,7 +36,8 @@ impl SpotifyPlaylistClient {
         result.extend(
             items
                 .into_iter()
-                .filter_map(|x| Track::from_item(x.expect("died"))),
+                .filter_map(Result::ok)
+                .filter_map(Track::from_item),
         );
 
         Ok(result)
@@ -44,9 +45,9 @@ impl SpotifyPlaylistClient {
 }
 
 impl Track {
-    pub fn from_item(it: rspotify::model::PlaylistItem) -> Option<Track> {
+    pub fn from_item(it: PlaylistItem) -> Option<Track> {
         match it.track {
-            Some(rspotify::model::PlayableItem::Track(t)) => {
+            Some(model::PlayableItem::Track(t)) => {
                 let album = t.album;
                 let artist_name = t
                     .artists

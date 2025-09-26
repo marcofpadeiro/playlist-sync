@@ -13,7 +13,7 @@ use crate::{
 pub async fn get_tracks_from_playlist(playlist_url: &str) -> Result<Vec<Track>> {
     let parsed_id = playlist_url.split('?').next().unwrap().split('/').last();
 
-    let id = parsed_id.ok_or_else(|| anyhow::anyhow!("Invalid Spotify playlist URL"))?;
+    let id = parsed_id.ok_or_else(|| anyhow::anyhow!("Invalid playlist URL"))?;
 
     SpotifyParser::get_tracks_from_playlist(id.to_string()).await
 }
