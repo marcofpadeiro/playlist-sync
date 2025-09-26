@@ -1,5 +1,5 @@
 use anyhow::Result;
-use playlist_sync::get_tracks_from_spotify_playlist;
+use playlist_sync::get_tracks_from_playlist;
 use std::{env, time::Instant};
 
 #[tokio::main]
@@ -10,7 +10,7 @@ async fn main() -> Result<()> {
         .nth(1)
         .expect("expected playlist id as first argument");
 
-    let playlist_items = get_tracks_from_spotify_playlist(&id).await;
+    let playlist_items = get_tracks_from_playlist(&id).await;
 
     println!("{:?}", playlist_items);
     println!("Operation took: {:?}", start.elapsed());

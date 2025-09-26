@@ -1,10 +1,10 @@
 pub mod auth;
 pub mod config;
-
-use std::error::Error;
+pub mod parser;
 
 use crate::track::{Track, release_year};
 
+use anyhow::Result;
 use futures::StreamExt;
 
 use rspotify::ClientError;
@@ -24,7 +24,7 @@ impl SpotifyPlaylistClient {
         Self { client }
     }
 
-    pub async fn get_tracks(&self, playlist_id_or_uri: &str) -> Result<Vec<Track>, Box<dyn Error>> {
+    pub async fn get_tracks(&self, playlist_id_or_uri: &str) -> Result<Vec<Track>> {
         let pid = PlaylistId::from_id_or_uri(playlist_id_or_uri)?;
         let mut result = Vec::new();
 

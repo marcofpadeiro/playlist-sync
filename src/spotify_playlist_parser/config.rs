@@ -1,4 +1,7 @@
-use std::{fs, path::{Path, PathBuf}};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
 use anyhow::Result;
 use rspotify::Token;
@@ -22,13 +25,14 @@ pub fn save_token(path: &Path, t: &Token) -> Result<()> {
     if let Some(parent) = path.parent() {
         let _ = fs::create_dir_all(parent);
     }
-    fs::write(path, serde_json::to_vec(&st)?)?;
+    let toml_str = toml::to_string(&st)?;
+    fs::write(path, toml_str)?;
     Ok(())
 }
 
 pub fn load_token(path: &PathBuf) -> Result<Token> {
     let bytes = fs::read(path)?;
-    let st: SerializableToken = serde_json::from_slice(&bytes)?;
+    let st: SerializableToken = toml::from_slice(&bytes)?;
 
     let expires_at = st
         .expires_at
