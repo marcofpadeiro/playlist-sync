@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use common::Track;
+    use playlist_sync::track::Track;
 
     fn build_track_from_csv(line: &str) -> Track {
         let mut parts = line.split(',');
@@ -12,7 +12,6 @@ mod tests {
             parts.next().unwrap_or_default().parse::<u32>().ok(),
             parts.next().unwrap_or_default().parse::<u32>().ok(),
             parts.next().unwrap_or_default().parse::<u32>().ok(),
-            None,
         )
     }
 

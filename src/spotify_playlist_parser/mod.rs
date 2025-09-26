@@ -1,6 +1,6 @@
 use std::io::Error;
 
-use common::{Track, TrackListProvider};
+use crate::{provider::PlaylistProvider, track::Track};
 
 pub struct SpotifyPlaylistParser {}
 
@@ -10,7 +10,7 @@ impl SpotifyPlaylistParser {
     }
 }
 
-impl TrackListProvider for SpotifyPlaylistParser {
+impl PlaylistProvider for SpotifyPlaylistParser {
     type Error = Error;
 
     fn get_tracks(&self) -> Result<Vec<Track>, Self::Error> {

@@ -2,19 +2,18 @@ use std::path::PathBuf;
 
 #[derive(Debug, Eq)]
 pub struct Track {
-    title: String,
-    album: String,
-    artist: String,
-    track_num: Option<u32>,
-    year: Option<u32>,
-    duration: Option<u32>, // ms
-    path: Option<PathBuf>,
+    pub title: String,
+    pub album: String,
+    pub artist: String,
+    pub track_num: Option<u32>,
+    pub year: Option<u32>,
+    pub duration: Option<u32>, // ms
 }
 
-pub trait TrackListProvider {
-    type Error;
-
-    fn get_tracks(&self) -> Result<Vec<Track>, Self::Error>;
+#[derive(Debug)]
+pub struct LocalTrack {
+    pub track: Track,
+    pub path: PathBuf,
 }
 
 impl Track {
@@ -25,7 +24,6 @@ impl Track {
         track_num: Option<u32>,
         year: Option<u32>,
         duration: Option<u32>,
-        path: Option<PathBuf>,
     ) -> Self {
         Self {
             title,
@@ -34,7 +32,6 @@ impl Track {
             track_num,
             year,
             duration,
-            path,
         }
     }
     fn eq_opt<T: PartialEq>(a: &Option<T>, b: &Option<T>) -> bool {
@@ -62,6 +59,23 @@ impl PartialEq for Track {
             3 => true,
             2 => self.secondaries_all_equal(other),
             _ => false,
+        }
+    }
+}
+
+impl LocalTrack {
+    pub fn new(
+        title: String,
+        album: String,
+        artist: String,
+        track_num: Option<u32>,
+        year: Option<u32>,
+        duration: Option<u32>,
+        path: PathBuf,
+    ) -> Self {
+        Self {
+            track: Track::new(title, album, artist, track_num, year, duration),
+            path: path,
         }
     }
 }

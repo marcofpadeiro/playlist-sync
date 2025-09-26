@@ -1,8 +1,10 @@
-[workspace]
-members = [
-    "src/crates/common",
-    "src/crates/local-music-library-parser",
-    "src/crates/spotify-playlist-parser",
-    "src/apps/cli",
-]
-resolver = "2"
+[package]
+name = "playlist-sync"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "playlist-sync"
+path = "src/cli/main.rs"
+
+[dependencies]
