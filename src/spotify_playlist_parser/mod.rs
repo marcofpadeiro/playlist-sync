@@ -55,7 +55,7 @@ impl Track {
                     .map(|a| a.name.clone())
                     .unwrap_or_default();
 
-                let dur_ms: u32 = t.duration.num_milliseconds() as u32;
+                let dur_ms = t.duration.num_milliseconds();
 
                 let year = release_year(album.release_date);
 
@@ -65,7 +65,7 @@ impl Track {
                     artist_name,
                     Some(t.track_number as u32),
                     year,
-                    Some(dur_ms),
+                    Some(dur_ms as u128),
                 ))
             }
             _ => None,

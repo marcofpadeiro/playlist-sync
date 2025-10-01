@@ -17,7 +17,16 @@ pub struct SpotifyParser {}
 
 #[async_trait]
 impl PlaylistProvider for SpotifyParser {
-    async fn get_tracks_from_playlist(playlist_url: String) -> Result<Vec<Track>> {
+    async fn get_tracks_from_playlist(playlist_url_or_id: String) -> Result<Vec<Track>> {
+        let parsed_id = playlist_url_or_id
+            .split('?')
+            .next()
+            .unwrap()
+            .split('/')
+            .last();
+
+        let id = parsed_id.ok_or_else(|| anyhow::anyhow!("Invalid playlist URL"))?;
+
         let creds = load_spotify_creds()?;
         let cache_path = cache_file_path();
 
@@ -54,7 +63,7 @@ impl PlaylistProvider for SpotifyParser {
         }
 
         let sp = SpotifyPlaylistClient::new(client);
-        let tracks = sp.get_tracks(&playlist_url).await?;
+        let tracks = sp.get_tracks(&id).await?;
 
         Ok(tracks)
     }
