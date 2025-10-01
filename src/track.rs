@@ -5,7 +5,7 @@ pub struct Track {
     pub artist: String,
     pub track_num: Option<u32>,
     pub year: Option<u32>,
-    pub duration: Option<u32>, // ms
+    pub duration: Option<u128>, // ms
 }
 
 impl Track {
@@ -15,7 +15,7 @@ impl Track {
         artist: String,
         track_num: Option<u32>,
         year: Option<u32>,
-        duration: Option<u32>,
+        duration: Option<u128>,
     ) -> Self {
         Self {
             title,

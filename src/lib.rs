@@ -4,6 +4,8 @@ pub mod provider;
 pub mod spotify_playlist_parser;
 pub mod track;
 
+use std::collections::HashMap;
+
 use anyhow::Result;
 
 use crate::{
@@ -16,4 +18,8 @@ pub async fn get_tracks_from_playlist(playlist_url: &str) -> Result<Vec<Track>> 
     let id = parsed_id.ok_or_else(|| anyhow::anyhow!("Invalid playlist URL"))?;
 
     SpotifyParser::get_tracks_from_playlist(id.to_string()).await
+}
+
+pub async fn get_tracks_from_local(path: &str) -> Result<HashMap<String, Vec<Track>>> {
+    local_music_library_parser::get_local_music_library_tracks(path)
 }
