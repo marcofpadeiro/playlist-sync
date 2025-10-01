@@ -5,7 +5,15 @@ use anyhow::anyhow;
 
 use crate::track::Track;
 
-pub fn get_local_music_library_tracks(dir: &str) -> anyhow::Result<HashMap<String, Vec<Track>>> {
+#[derive(Debug)]
+pub struct LocalTrack {
+    pub relative_path: String,
+    pub track: Track,
+}
+
+pub fn get_local_music_library_tracks(
+    dir: &str,
+) -> anyhow::Result<HashMap<String, Vec<LocalTrack>>> {
     let path = Path::new(dir);
 
     if !path.exists() {
@@ -15,13 +23,16 @@ pub fn get_local_music_library_tracks(dir: &str) -> anyhow::Result<HashMap<Strin
         return Err(anyhow!("Path \"{}\" is not a directory not exist", dir));
     }
 
-    let mut result: HashMap<String, Vec<Track>> = HashMap::new();
+    let mut result: HashMap<String, Vec<LocalTrack>> = HashMap::new();
     get_files_in_dir(path)?.iter().for_each(|file| {
         if let Some(track) = Track::from_file(file) {
-            result
-                .entry(track.artist.clone())
-                .or_insert(vec![])
-                .push(track);
+            let relative_path = file.replace(dir, "");
+            let artist = track.artist.clone();
+            let local_track = LocalTrack {
+                relative_path,
+                track,
+            };
+            result.entry(artist).or_insert(vec![]).push(local_track);
         }
     });
     Ok(result)

@@ -9,11 +9,11 @@ use playlist_sync::{
 async fn main() -> Result<()> {
     let start = Instant::now();
 
-    let id = env::args()
+    let url = env::args()
         .nth(1)
         .expect("expected playlist id as first argument");
 
-    let playlist_items = get_tracks_from_playlist(&id).await;
+    let playlist_items = get_tracks_from_playlist(url).await;
 
     println!("{:?}", playlist_items);
     println!("Operation took: {:?}", start.elapsed());
