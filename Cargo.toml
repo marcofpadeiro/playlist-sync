@@ -5,7 +5,7 @@ edition = "2024"
 
 [[bin]]
 name = "playlist-sync"
-path = "src/cli/main.rs"
+path = "src/main.rs"
 
 [dependencies]
 rspotify = { version = "*", features = ["env-file"] }
